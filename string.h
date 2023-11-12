@@ -235,10 +235,11 @@ std::ostream& operator<<(std::ostream& out, const String& str) {
 std::istream& operator>>(std::istream& in, String& str) {
   str.clear();
   char tmp;
-  in.get(tmp);
-  while (!std::isspace(tmp)) {
+  while (in.get(tmp)) {
+    if (std::isspace(tmp)) {
+      break;
+    }
     str.push_back(tmp);
-    in.get(tmp);
   }
   return in;
 }
