@@ -233,23 +233,13 @@ std::ostream& operator<<(std::ostream& out, const String& str) {
 }
 
 std::istream& operator>>(std::istream& in, String& str) {
-//  str.clear();
-//  char tmp;
-//  in.get(tmp);
-//  while (tmp != ' ' && tmp != '\n') {
-//    str.push_back(tmp);
-//    in.get(tmp);
-//  }
-  char* arr = new char[4096];
-  in >> arr;
-  int cnt = 0;
-  for (size_t i = 0; arr[i] != '\0'; ++i) {
-    ++cnt;
+  str.clear();
+  char tmp;
+  in.get(tmp);
+  while (!std::isspace(tmp)) {
+    str.push_back(tmp);
+    in.get(tmp);
   }
-  str.change_capacity(cnt);
-  memcpy(str.array_, arr, cnt);
-  str.array_[cnt] = '\0';
-  str.size_ = cnt;
   return in;
 }
 
