@@ -3,18 +3,18 @@
 
 class String {
  private:
-  char* array_ = nullptr;
   size_t size_ = 0;
   size_t capacity_ = 0;
+  char* array_ = nullptr;
 
   explicit String(int count);
   void swap(String& str);
   void change_capacity(size_t new_capacity);
   static bool check(char* str_begin, const char* str_end, char* substr_begin);
-  size_t find(const String& substr, size_t start, size_t stop, int step) const;
+  size_t find(const String& substr, size_t start, size_t stop,
+              int step) const;
 
  public:
-
   String(const char* str);
   String();
   String(size_t n, char ch);
@@ -32,7 +32,7 @@ class String {
   const char& back() const;
   char& back();
   String& operator+=(const String& other);
-  String& operator+=(const char ch);
+  String& operator+=(char ch);
   size_t find(const String& substr) const;
   size_t rfind(const String& substr) const;
   String substr(size_t start, int count) const;
@@ -67,7 +67,7 @@ String operator+(const String& a, char ch);
 String operator+(char ch, const String& a);
 
 String::String(int count)
-    : array_(new char[count + 1]), size_(count), capacity_(count) {
+    : size_(count), capacity_(count), array_(new char[count + 1]) {
   array_[size_] = '\0';
 }
 
@@ -96,32 +96,30 @@ bool String::check(char* str_begin, const char* str_end, char* substr_begin) {
   return true;
 }
 
-size_t String::find(const String& substr, size_t start, size_t stop, int step) const {
+size_t String::find(const String& substr, size_t start, size_t stop,
+                    int step) const {
   for (size_t i = start; i != stop; i += step) {
-    if (check(&array_[i], &array_[i + substr.size_], &substr.array_[0])) {
+    if (check(array_ + i, array_ + i + substr.size_, substr.array_)) {
       return i;
     }
   }
   return length();
 }
 
-String::String(const char* str) {
-  size_ = strlen(str);
-  capacity_ = size_;
-  array_ = new char[capacity_ + 1];
+String::String(const char* str) : size_(strlen(str)), capacity_(size_), array_(new char[capacity_ + 1]) {
   memcpy(array_, str, size_ + 1);
 }
 
 String::String() : String(0) {};
 
 String::String(size_t n, char ch)
-    : array_(new char[n + 1]), size_(n), capacity_(n) {
+    : size_(n), capacity_(n), array_(new char[n + 1]) {
   memset(array_, ch, n);
   array_[n] = '\0';
 }
 
 String::String(const String& str)
-    : array_(new char[str.size_ + 1]), size_(str.size_), capacity_(str.size_) {
+    : size_(str.size_), capacity_(str.size_), array_(new char[str.size_ + 1]) {
   memcpy(array_, str.array_, size_ + 1);
 }
 
@@ -301,8 +299,7 @@ String operator+(const String& a, char ch) {
 }
 
 String operator+(char ch, const String& a) {
-  String result("");
-  result += ch;
+  String result(1, ch);
   result += a;
   return result;
 }
